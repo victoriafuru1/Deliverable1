@@ -1,3 +1,6 @@
+"""Take mean daily temperature and daily precipitation from frost.met.no
+and make a graph with both variables.
+"""
 
 from pathlib import Path
 
@@ -29,7 +32,7 @@ json_data1 = r1.json()
 
 if r.status_code == 200:
     xtime: list[str] = []
-    ytemperature: list[float]= []
+    ytemperature: list[float] = []
 
     for day in json_data['data']:
         date = day['referenceTime']
@@ -37,26 +40,30 @@ if r.status_code == 200:
     
         xtime.append(date)
         ytemperature.append(temp)
+
 else:
     print(f"Something happened! statuscode: {r.status_code}")
     print(json_data.get('error', {}).get('message'))
 
 if r1.status_code == 200:
-    all_precipitation = []
+    all_precipitation: list[float] = []
 
     for precip in json_data1['data']:
-           precipitation = precip['observations'][0]['value']
-           all_precipitation.append(precipitation)
+        precipitation = precip['observations'][0]['value']
+        all_precipitation.append(precipitation)
+
 else:
-    print(f"Something happened! statuscode: {r.status_code}")
+    print(f"Something happened! statuscode: {r1.status_code}")
     print(json_data1.get('error', {}).get('message'))
 
 fig, ax1 = plt.subplots()
-ax1.plot(xtime, ytemperature, color='red', label = 'temperature')
-ax1.set_ylabel('Daily mean temperature in °C', color = 'red')
+ax1.plot(xtime, ytemperature, color='red', label='temperature')
+ax1.set_ylabel('Daily mean temperature in °C', color='red')
+
 ax2 = ax1.twinx()
-ax2.bar(xtime, all_precipitation, color = 'blue', label = 'precipitation')
-ax2.set_ylabel("Precipitation in mm", color = 'blue')
+ax2.bar(xtime, all_precipitation, color='blue', label='precipitation')
+ax2.set_ylabel("Precipitation in mm", color='blue')
+
 plt.xlabel('Date (January - December)')
 plt.title("Daily precipitation and mean temperature in Ås 2025")
 plt.show()
