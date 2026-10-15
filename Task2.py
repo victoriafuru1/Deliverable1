@@ -68,11 +68,14 @@ if r1.status_code == 200:
         precipitation = precip['observations'][0]['value']
         all_precipitation.append(precipitation)
 
-    
+    fig, ax1 = plt.subplots()
+    ax1.plot(xtime,ytemperature, color='red', label = 'temperature')
+    ax2 = ax1.twinx()
+    ax2.plot(xtime, all_precipitation)
+    plt.show()  
+
 else:
     print(f"Something happened! statuscode: {r1.status_code}")
     print(json_data1.get('error', {}).get('message'))
 
-fig, ax1 = plt.subplots()
-ax1.plot(xtime,ytemperature, color='red', label = 'temperature')
-plt.show()
+
