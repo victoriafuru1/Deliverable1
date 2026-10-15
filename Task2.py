@@ -10,14 +10,23 @@ with open(file_path, "r") as f:
     client_id = f.read().strip()
 
 endpoint = 'https://frost.met.no/observations/v0.jsonld'
-parameters = {
+
+parameters_temp = {
     'sources': 'SN17850',
     'elements': 'mean(air_temperature P1D)',
     'referencetime': '2025-01-01/2025-12-31',
 }
+parameters_precip = {
+    'sources': 'SN17850',
+    'elements': 'sum(precipitation_amount P1D)',
+    'referencetime': '2025-01-01/2025-12-31',
+}
 
-r = requests.get(endpoint, params=parameters, auth=(client_id, ''), timeout=10)
+r = requests.get(endpoint, params=parameters_temp, auth=(client_id, ''), timeout=10)
 json_data = r.json()
+
+r1 = requests.get(endpoint, params=parameters_precip, auth=(client_id, ''), timeout=10)
+json_data1 = r1.json() 
 
 if r.status_code == 200:
     xtime: list[str] = []
@@ -30,22 +39,12 @@ if r.status_code == 200:
         xtime.append(date)
         ytemperature.append(temp)
 
-    mean_year_temp = np.mean(ytemperature)
-    median_year_temp = np.median(ytemperature)
-    min_year_temp = np.min(ytemperature)
-    max_year_temp = np.max(ytemperature)
-        
-    print("Summary of temperatures this year (2025) in Ås:")
-    print(f"{'Mean temperature of the year:' :<33} {mean_year_temp:>13.1f}°C ")
-    print(f"{'Median temperature of the year:' :<33} {median_year_temp:>13.1f}°C ")
-    print(f"{'Lowest temperature of the year:' :<33} {min_year_temp:>13.1f}°C")
-    print(f"{'Highest temperature of the year:' :<33} {max_year_temp:>13.1f}°C")
+if r1.status_code == 200:
+    all_precipitation = []
 
-    plt.plot(xtime, ytemperature)
-    plt.title('Daily mean temperatures in Ås, 2025')
-    plt.xlabel('Date (January - December)')
-    plt.ylabel('mean temperature')
-    plt.show()
+    for precip in json_data['data']:
+           precipitation = precip['observations'][0]['value']
+           all_precipitation.append(precipitation)
 
 else:
     print(f"Something happened! statuscode: {r.status_code}")
@@ -53,24 +52,27 @@ else:
 
 
 # Task 2
-parameters = {
-'sources': 'SN17850',
-'elements': 'sum(precipitation_amount P1D)',
-'referencetime': '2025-01-01/2025-12-31',
+parameters_precip = {
+    'sources': 'SN17850',
+    'elements': 'sum(precipitation_amount P1D)',
+    'referencetime': '2025-01-01/2025-12-31',
 }
-r1 = requests.get(endpoint, params=parameters, auth=(client_id, ''), timeout=10)
-json_data = r1.json()
+r1 = requests.get(endpoint, params=parameters_precip, auth=(client_id, ''), timeout=10)
+json_data1 = r1.json()
 
 if r1.status_code == 200:
-precipitation_above24h = []
-preicpitation_date = []
+    all_precipitation = []
+    
 
-for precip in json_data['data']:
-precipitation = precip['observations'][0]['value']
-pdate = precip['referenceTime']
+    for precip in json_data1['data']:
+        precipitation = precip['observations'][0]['value']
+        all_precipitation.append(precipitation)
 
-if precipitation > 0:
-precipitation_above24h.append(precipitation)
-preicpitation_date.append(pdate)
-plt.plot(pdate, precipitation_above24h)
-plt.show(
+    
+else:
+    print(f"Something happened! statuscode: {r1.status_code}")
+    print(json_data1.get('error', {}).get('message'))
+
+fig, ax1 = plt.subplots()
+ax1.plot(xtime,ytemperature, color='red', label = 'temperature')
+plt.show()
