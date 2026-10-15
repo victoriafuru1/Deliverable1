@@ -33,6 +33,8 @@ if r.status_code == 200:
         ytemperature.append(temp)
 
     plt.plot(xtime, ytemperature)
+    plt.xlabel('Date')
+    plt.ylabel('mean temperature')
     plt.show()
 else: 
     print(f"Something happened! statuscode: {r.status_code}")
