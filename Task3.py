@@ -77,38 +77,19 @@ else:
     
         
 print("Summary of temperatures for year 1925 and 2025 in Ås:")
-print(f"{'Mean temperature of 1925:' :<33} {mean_year_temp100:>8.1f}°C ")
-print(f"{'Median temperature of 1925:' :<33} {median_year_temp100:>8.1f}°C ")
-print(f"{'Lowest temperature of 1925:' :<33} {min_year_temp100:>8.1f}°C")
-print(f"{'Highest temperature of 1925:' :<33} {max_year_temp100:>8.1f}°C")
+print(f"{'Mean temperature for' :<32}1925:  {mean_year_temp100:>4.1f}°C    {'2025:'}  {mean_year_temp:>4.1f}°C ")
+print(f"{'Median temperature for' :<32}1925:  {median_year_temp100:>4.1f}°C    {'2025:'}  {median_year_temp:>4.1f}°C ")
+print(f"{'Lowest temperature for' :<32}1925: {min_year_temp100:>4.1f}°C    {'2025:'} {min_year_temp:>4.1f}°C ")
+print(f"{'Highest temperature for' :<32}1925:  {max_year_temp100:>4.1f}°C    {'2025:'}  {max_year_temp:>4.1f}°C ")
 
-plt.plot(xtime_no_year, ytemperature, ytemperature100)
+plt.plot(xtime_no_year, ytemperature, xtime_no_year, ytemperature100)
+plt.legend(['2025', '1925'])
 plt.title('Daily mean temperatures in Ås, 1925 and 2025')
 plt.xlabel('Date (January - December)')
 plt.ylabel('temperature in °C')
 plt.show()
 
-"""
-fig, ax1 = plt.subplots()
-ax1.plot(xtime, ytemperature, color='red', label='temperature 2025')
-ax1.set_ylabel('Daily mean temperature in °C 2025', color='red')
 
-ax2 = ax1.twinx()
-ax2.plot(xtime, ytemperature100, color='blue', label='temperature 1925')
-ax2.set_ylabel("daily mean temperature in °C 1925", color='blue')
-
-plt.xlabel('Date (January - December)')
-plt.title("Daily mean temperature in Ås, 1925 and 2025")
-plt.show()
-
-
-
-plt.plot(xtime, ytemperature)
-    plt.title('Daily mean temperatures in Ås, 1925')
-    plt.xlabel('Date (January - December)')
-    plt.ylabel('mean temperature in °C')
-    plt.show()
-"""
 
 
 
